@@ -241,7 +241,7 @@ class RankedChoiceRunner:
         :param winner_list: the list of potential winning candidates.
         :param votes: the current vote distribution dictionary (``VoteDict``) of the election.
         :param on_tie: a consumer function to be called with the list of tied winners .
-        :return: the singular winner.
+        :return: the singular winner and a Literal that indicates the sucessfull tiebreaker round.
         :raises:
             ValueError: if the tiebreaker system still determines a tie.
         """
