@@ -1,4 +1,4 @@
-# Ranked Choice Election Runner
+# Election Runner
 
 This program runs a series of ranked choice elections as specified by the
 13th Edition of the Student Council Constitution. The program also
