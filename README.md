@@ -1,6 +1,6 @@
 # Election Runner
 
-This program runs a series of ranked choice elections as specified by the
+This program runs a series of instant-runoff ranked choice elections as specified by the
 13th Edition of the Student Council Constitution. The program also
 visually displays each stage of each instant runoff round.
 
