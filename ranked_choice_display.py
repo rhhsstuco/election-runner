@@ -1,4 +1,5 @@
 from collections import defaultdict
+from collections.abc import Mapping
 import platform
 
 from matplotlib import use
@@ -34,13 +35,7 @@ def _transform_votes(votes: VoteDict):
     return candidates, ballots, ballots_counts
 
 
-def _display_ballots(candidate: str, ballots: list[Ballot]):
-    """
-    Displays the vote distribution (1st, 2nd, 3rd, ...) on a bar chart using matplotlib.
-
-    :arg candidate the candidate whose votes are displayed.
-    :arg ballots the ballots for the candidate.
-    """
+def _compute_ballot_distribution(candidate: str, ballots: list[Ballot]):
     if len(ballots) == 0:
         return
 
@@ -57,6 +52,20 @@ def _display_ballots(candidate: str, ballots: list[Ballot]):
 
     # No valid ballots
     if len(ballot_place_counts) == 0:
+        return
+
+    return ballot_place_counts
+
+def _display_ballots(candidate: str, ballots: list[Ballot]):
+    """
+    Displays the vote distribution (1st, 2nd, 3rd, ...) on a bar chart using matplotlib.
+
+    :arg candidate the candidate whose votes are displayed.
+    :arg ballots the ballots for the candidate.
+    """
+    ballot_place_counts: Mapping[int, int] = _compute_ballot_distribution(candidate=candidate, ballots=ballots)
+
+    if not ballot_place_counts:
         return
 
     subplots: tuple[Figure, Axes] = plt.subplots()
@@ -157,8 +166,8 @@ class _ElectionDisplay:
 
     def _prev(self):
         """
-        Moves the displayed chart to the next stage of the election,
-        closing the chart window if the end is reached.
+        Moves the displayed chart to the previous stage of the election,
+        if it exists
         """
         if self.index <= 0:
             return
@@ -252,17 +261,17 @@ class _ElectionDisplay:
         plt.ylim([0, self._runner.num_ballots + 1])
 
         # Allocate space for 'next' and 'prev' buttons
-        self.fig.subplots_adjust(bottom=0.25)
-        ax_prev = self.fig.add_axes((0.7, 0.05, 0.1, 0.075))
-        ax_next = self.fig.add_axes((0.81, 0.05, 0.1, 0.075))
+        self.fig.subplots_adjust(bottom=0.3)
+        ax_prev = self.fig.add_axes((0.7, 0.01, 0.1, 0.075))
+        ax_next = self.fig.add_axes((0.81, 0.01, 0.1, 0.075))
 
         self.axes.tick_params(axis='x', labelrotation=90)
 
         # Create buttons and attached event listeners
         next_button = Button(ax_next, 'Next')
-        next_button.on_clicked(lambda e: self._next())
+        next_button.on_clicked(lambda _: self._next())
         prev_button = Button(ax_prev, 'Prev')
-        prev_button.on_clicked(lambda e: self._prev())
+        prev_button.on_clicked(lambda _: self._prev())
 
         # Constructs initial bar chart
         self.rects = self.axes.bar(

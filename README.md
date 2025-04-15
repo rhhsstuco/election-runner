@@ -107,10 +107,20 @@ As such, the format goes as (the header values do not matter):
 
 ## Reference Format
 
-The format of the reference CSV file goes as (the header values do not matter):
+The format of the reference CSV file can vary (the header values do not matter).
+
+If ballots are to be filtered by both the email and grade of a voter, use:
 
 | Email                    | Grade |
 |--------------------------|-------|
 | _________@gapps.yrdsb.ca | 11    |
 | _________@gapps.yrdsb.ca | 9     |
 | ...                      | ...   |
+
+To filter by just email, use:
+
+| Email                    |
+|--------------------------|
+| _________@gapps.yrdsb.ca |
+| _________@gapps.yrdsb.ca |
+| ...                      |

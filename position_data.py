@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from custom_types import Ballot
 
 
-@dataclass(frozen=True, kw_only=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class PositionData:
     """
     A dataclass containing parameters about the election for a position

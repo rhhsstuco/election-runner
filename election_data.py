@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from position_data import PositionData
 
 
-@dataclass(frozen=True, kw_only=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class ElectionMetadata:
     """
     A dataclass containing parameters and metadata about the election.
@@ -17,7 +17,7 @@ class ElectionMetadata:
     show_display: bool
 
 
-@dataclass(frozen=True, kw_only=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class ElectionData:
     """
     A dataclass containing parameters and metadata about the election.

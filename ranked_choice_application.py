@@ -77,12 +77,13 @@ class RankedChoiceApplication:
                     _exhaust(run)
 
             file_output.append(f"Winners for {position_metadata.name} (candidates: {position_metadata.num_winners}; "
-                               f"threshold: {position_metadata.threshold},"
+                               f"threshold: {position_metadata.threshold}; "
                                f"number of ballots: {len(position_metadata.ballots)}):")
 
             for winner in election_runner.winners:
                 if winner in election_runner.notes:
-                    file_output.append(f"{winner} ({', '.join(election_runner.notes[winner])})")
+                    notes_string = ', '.join(election_runner.notes[winner])
+                    file_output.append(f"{winner} ({notes_string})")
                 else:
                     file_output.append(winner)
 

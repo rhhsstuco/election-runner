@@ -1,7 +1,8 @@
+from collections.abc import MutableMapping
 import csv
 import json
 from collections import defaultdict
-from typing import Any, Mapping
+from typing import Any, Collection, Mapping
 
 from custom_types import Ballot
 from election_data import ElectionData, ElectionMetadata
@@ -61,7 +62,8 @@ class BallotReader:
         # Mapping of all positions to their ballots
         vote_list: dict[str, list[Ballot]] = defaultdict(list)
 
-        email_grade_reference: dict[str, int] = {}
+        email_grade_reference: MutableMapping[str, int] | None = None
+        email_reference: Collection[str] | None = None
 
         if "reference" in config_dict:
             # Filtering invalid votes
@@ -71,10 +73,27 @@ class BallotReader:
                 reader = csv.reader(file, delimiter=",")
 
                 # Skip the headers
-                next(reader, None)
+                header_row = next(reader, None)
 
-                for row in reader:
-                    email_grade_reference[row[0]] = int(row[1])
+                if not header_row:
+                    raise ValueError(f"Reference file '{reference}' is empty.")
+                
+                reference_num_cols = len(header_row)
+
+                if reference_num_cols == 1:
+                    email_reference = set()
+
+                    for row in reader:
+                        email_reference.add(row[0])
+
+                elif reference_num_cols == 2:
+                    email_grade_reference = {}
+
+                    for row in reader:
+                        email_grade_reference[row[0]] = int(row[1])
+
+                else:
+                    raise ValueError(f"Reference file '{reference}' has too many columns.")
 
         num_ballots = 0
 
@@ -88,10 +107,15 @@ class BallotReader:
 
             # Assign ballots to positions
             for i, row in enumerate(reader):
-                start = 2 if "reference" in config_dict else 1
+                start = 2 if email_grade_reference is not None else 1
 
-                if "reference" in config_dict:
-                    grade = int(row[1])
+                if email_grade_reference is not None:
+                    try:
+                        grade = int(row[1])
+                    except ValueError:
+                        raise ValueError("Invalid grade input. This may be because " \
+                        "no grade column is provided in the ballot data.")
+                    
                     email = row[-1]
 
                     # Check for invalid ballots
@@ -105,6 +129,14 @@ class BallotReader:
 
                     if email_grade_reference[email] != grade:
                         invalid_ballots["Grade Mismatch"] += 1
+                        continue
+                
+                if email_reference is not None :
+                    email = row[-1]
+
+                    # Check for invalid ballots
+                    if email not in email_reference:
+                        invalid_ballots["Student Not Found"] += 1
                         continue
 
                 num_ballots += 1
@@ -145,7 +177,7 @@ class BallotReader:
         global_threshold = float(config_dict["threshold"])
         show_display = bool(config_dict["show_display"])
 
-        for position, ballots in vote_list.items():
+        for position in vote_list.keys():
             # Reads the election threshold parameter, defaulting to the global value if needed
             if "threshold" in config_dict["positions"][position]:
                 threshold = float(config_dict["positions"][position]["threshold"])
