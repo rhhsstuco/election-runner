@@ -32,8 +32,11 @@ The configuration schema is as follows:
   * The source contains the raw ballot information
 * `[reference]`: `string (optional)`
   * The path to the reference `.csv` file. **View the format down below**.
-  * The reference contains a mapping of emails to grades in order to filter out invalid ballots.
-  * If omitted, the program will not perform filtering, and the grade and email columns in the input format below should be removed.
+  * The reference contains either of the following in order to filter out invalid ballots:
+    * A list of emails, which will invalidate ballots whose emails are not in the list.
+    * A mapping of emails to grades, which will invalidate ballots whose emails are not in the set or those do not correspond to the appropriate grade.
+  * If filtering by email only, the grade columns in the input format below should be removed.
+  * If omitted entirely, the program will not perform filtering, and the grade and email columns in the input format below should be removed.
 * `output`: `string`
   * The path to the output `.txt` file.
 * `threshold`: `number`
