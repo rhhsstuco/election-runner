@@ -221,7 +221,7 @@ class _ElectionDisplay:
             rect.set_height(ballot_count)
 
             # Changes color if a majority is attained
-            if ballot_count > self._runner.majority:
+            if ballot_count >= self._runner.majority:
                 rect.set_color("red")
             else:
                 rect.set_color("blue")

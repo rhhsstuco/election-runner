@@ -173,7 +173,7 @@ class RankedChoiceRunner:
         """
         yield _copy_vote_dict(votes)
 
-        has_majority = [len(ballots) > self._majority for _, ballots in votes.items()]
+        has_majority = [len(ballots) >= self._majority for _, ballots in votes.items()]
 
         while not any(has_majority):
             eliminated_candidates = _select_removable_candidates(votes)
@@ -188,7 +188,7 @@ class RankedChoiceRunner:
             for eliminated_candidate in eliminated_candidates:
                 del votes[eliminated_candidate]
 
-            has_majority = [len(ballots) > self._majority for _, ballots in votes.items()]
+            has_majority = [len(ballots) >= self._majority for _, ballots in votes.items()]
 
             yield _copy_vote_dict(votes)
 

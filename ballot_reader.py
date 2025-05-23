@@ -41,8 +41,7 @@ class BallotReader:
         """
         Creates a ``BallotReader`` instance for reading ballots.
 
-        :return: a tuple containing the output filepath, a list of ``PositionData`` instances representing the
-        ballots and parameters of the election for a single position, and the total number of ballots
+        :return: an `ElectionData` object containing data and metadata about the ballots 
         """
         with open(self.config_filepath) as file:
             config_dict: dict[str, Any] = json.load(file)

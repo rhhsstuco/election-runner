@@ -43,7 +43,7 @@ The configuration schema is as follows:
   * a floating point value between 0 and 1 (inclusive) which determines
     the percentage of votes that defines the majority.
   * Let `N` be the total amount of votes and `n` be the `threshold` value. Then
-    `majority = floor(N * n) + 1`.
+    `majority = floor(N * n) + 1` and a candidate has the majority if they have at least this number of votes.
 * `show_display`: `boolean`
   * If the election process and results should be displayed visually
 * `positions`: `object`

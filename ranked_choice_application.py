@@ -28,6 +28,7 @@ class RankedChoiceApplication:
         """
         election_data = BallotReader(config_filepath).read()
 
+
         self.output_file = election_data.metadata.output_file
         self.num_ballots = election_data.metadata.num_ballots
         self.show_display = election_data.metadata.show_display
